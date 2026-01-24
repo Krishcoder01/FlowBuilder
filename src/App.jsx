@@ -1,5 +1,6 @@
 import { useState , useRef } from 'react'
 import FlowCanvas from './components/FlowCanvas'
+import FlowReact from './components/FlowReact'
 
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
 
   return (
     <>
- <FlowCanvas/>
+ {/* <FlowCanvas/> */}
+ <FlowReact/>
     </>
   )
 }
