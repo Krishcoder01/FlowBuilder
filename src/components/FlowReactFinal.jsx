@@ -1,29 +1,54 @@
 import { useState } from 'react';
-import  {
-    ReactFlow,
+import {
+  ReactFlow,
   Background,
   Controls,
-  MiniMap,
   useNodesState,
-  useEdgesState
+  useEdgesState,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-import CustomNode from './CustomNode';
+import CustomNodeF from './CustomNodeF';
 
 const nodeTypes = {
-  custom: CustomNode,
+  custom: CustomNodeF,
 };
 
-const FlowReact = () => {
+const FlowReactFinal = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [parentId, setParentId] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null); 
 
-  const addNode = label => {
+  const rootNode = nodes.find(n => n.data.parentId === null);
+
+
+  // Cycle detection
+  const wouldCreateCycle = (nodes, parentId, childId) => {
+    let current = parentId;
+    while (current) {
+      if (current === childId) return true;
+      const parentNode = nodes.find(n => n.id === current);
+      current = parentNode?.data.parentId ?? null;
+    }
+    return false;
+  };
+
+  // Add node
+  const addNode = (label) => {
+    if (!parentId && rootNode) {
+      console.warn('Root node already exists');
+      return;
+    }
+
     const id = Date.now().toString();
     const parent = nodes.find(n => n.id === parentId);
+
+    if (parentId === id || (parentId && wouldCreateCycle(nodes, parentId, id))) {
+      console.warn('Invalid parent — cycle/self-link detected');
+      return;
+    }
 
     const newNode = {
       id,
@@ -33,10 +58,15 @@ const FlowReact = () => {
         : { x: window.innerWidth / 2 - 75, y: window.innerHeight / 2 - 40 },
       data: {
         label,
+        parentId: parentId ?? null,
         onAdd: () => {
           setParentId(id);
           setShowPopup(true);
         },
+        onSelect: () => {
+  console.warn("SELECT CLICKED", id);
+  setSelectedNode(nodes.find(n => n.id === id));
+},
       },
     };
 
@@ -69,10 +99,9 @@ const FlowReact = () => {
       >
         <Background />
         <Controls />
-        <MiniMap />
       </ReactFlow>
 
-      {nodes.length === 0 && !showPopup && (
+      {!rootNode && !showPopup && (
         <button
           onClick={() => setShowPopup(true)}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-blue-600 text-white rounded-full shadow-xl z-10"
@@ -101,4 +130,4 @@ const FlowReact = () => {
   );
 };
 
-export default FlowReact;
+export default FlowReactFinal;

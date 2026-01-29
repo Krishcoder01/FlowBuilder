@@ -1,15 +1,11 @@
 import { useState , useRef } from 'react'
-import FlowCanvas from './components/FlowCanvas'
-import FlowReact from './components/FlowReact'
+import FlowReactFinal from './components/FlowReactFinal'
 
 
 function App() {
-
-
   return (
     <>
- {/* <FlowCanvas/> */}
- <FlowReact/>
+  <FlowReactFinal/>
     </>
   )
 }
