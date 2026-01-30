@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -23,6 +23,21 @@ const FlowReactFinal = () => {
 
   const rootNode = nodes.find(n => n.data.parentId === null);
 
+
+
+  //Local Storage Impleent
+  useEffect(() => {
+    const storedNodes = localStorage.getItem('nodes');
+    const storedEdges = localStorage.getItem('edges');
+    if (storedNodes) setNodes(JSON.parse(storedNodes));
+    if (storedEdges) setEdges(JSON.parse(storedEdges));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('nodes', JSON.stringify(nodes));
+    localStorage.setItem('edges', JSON.stringify(edges));
+  }
+, [nodes, edges]);
 
   // Cycle detection
   const wouldCreateCycle = (nodes, parentId, childId) => {
