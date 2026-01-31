@@ -1,6 +1,6 @@
 import { Handle, Position } from '@xyflow/react';
 
-const CustomNodeF = ({ data }) => {
+const CustomNodeF = ({ id, data, onAdd, onSelect }) => {
   return (
     <div className="w-[150px] h-[80px] bg-white border-2 border-blue-500 rounded-lg shadow relative">
 
@@ -12,7 +12,7 @@ const CustomNodeF = ({ data }) => {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          data.onAdd();
+          onAdd(id);
         }}
         className="nodrag absolute right-2 top-2"
       >
@@ -23,7 +23,7 @@ const CustomNodeF = ({ data }) => {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          data.onSelect();
+          onSelect(id);
         }}
         className="nodrag absolute left-2 bottom-2 text-xs text-green-500"
       >

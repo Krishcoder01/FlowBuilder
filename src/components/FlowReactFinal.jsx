@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState , useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -10,9 +10,8 @@ import '@xyflow/react/dist/style.css';
 
 import CustomNodeF from './CustomNodeF';
 
-const nodeTypes = {
-  custom: CustomNodeF,
-};
+
+
 
 const FlowReactFinal = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -20,20 +19,43 @@ const FlowReactFinal = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [parentId, setParentId] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null); 
+  const hasLoadedStorage = useRef(false);
 
-  const rootNode = nodes.find(n => n.data.parentId === null);
+  const rootNode = nodes.find(n => n.data?.parentId === null);
 
+
+  const nodeTypes = {
+  custom: (props) => (
+    <CustomNodeF
+      {...props}
+      onAdd={(id) => {
+        console.log('Add child to node:', id);
+        setParentId(id);
+        setShowPopup(true);
+      }}
+      onSelect={(id) => {
+        setSelectedNode(id);
+      }}
+    />
+  ),
+};
 
 
   //Local Storage Impleent
   useEffect(() => {
     const storedNodes = localStorage.getItem('nodes');
     const storedEdges = localStorage.getItem('edges');
+    console.log('Loaded from localStorage:', storedNodes, storedEdges);
     if (storedNodes) setNodes(JSON.parse(storedNodes));
     if (storedEdges) setEdges(JSON.parse(storedEdges));
+
+    hasLoadedStorage.current = true;
+    
   }, []);
 
   useEffect(() => {
+    if (!hasLoadedStorage.current) return;
+
     localStorage.setItem('nodes', JSON.stringify(nodes));
     localStorage.setItem('edges', JSON.stringify(edges));
   }
@@ -74,14 +96,6 @@ const FlowReactFinal = () => {
       data: {
         label,
         parentId: parentId ?? null,
-        onAdd: () => {
-          setParentId(id);
-          setShowPopup(true);
-        },
-        onSelect: () => {
-  console.warn("SELECT CLICKED", id);
-  setSelectedNode(nodes.find(n => n.id === id));
-},
       },
     };
 
