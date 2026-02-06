@@ -5,7 +5,7 @@ const BaseNode = ({ id, data, onAdd, onSelect , children }) => {
   return (
     <div className="min-w-[16vw] min-h-[6vh] border-double border-4 border-[#525253] bg-[#252527] rounded-3xl  p-2 shadow relative">
     
-      <div className="text-sm text-white overflow-hidden">
+      <div className="text-sm min-h-[8vh] text-white overflow-hidden">
         {children}
       </div>
 

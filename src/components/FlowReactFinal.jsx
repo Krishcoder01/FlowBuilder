@@ -211,7 +211,7 @@ const updateNodeData = (id, patch) => {
           </div>
         </button>
       )}
-      {showPopup && <div onClick={() => setShowPopup(false)} className='absolute  inset-0 flex bg-black/40  items-center justify-center'>
+      {showPopup && <div onClick={() => setShowPopup(false)} className='absolute  inset-0 flex bg-black/65  items-center justify-center'>
         <div  className='parent p-2 rounded-xl bg-[#252527] w-[40vw]'>
           <div className=' phelper  flex flex-col gap-4'>
             <div className='child01 bg-[#2d2d2f] min-h-[5vh] rounded-xl flex items-center  gap-2'>
